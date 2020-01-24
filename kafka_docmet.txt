@@ -1,0 +1,32 @@
+download sdk (as kafka is written in java so it needs jdk)
+single node kafka cluster
+download any version of kafka from its official website(I downloaded 2.0.0 binary download scala 2.12) 
+uncompress it two times (I moved the extracted file to C drive but it is optional as we will save the invironment veriable for the same)
+open \config\zookeeper.properties and change the "DataDir=/temp/zookeeper" location to a new location which u have created now. 
+then open server.properties 1.change "log.dirs=/tmp../.." to new kafkalog file which needs to be created in kafka final extracted file 
+			    2.under internaltopics settings add-> offsets.topic.num.partitions=1
+			    3.add->  min.insync.replicas=1
+			    4.add->  default.replication.factor=1
+
+under kafka bin directory there is a windows directory this contains files(.bat) which are tools of kafka (it is advised to add its path  in path veriable).
+
+
+kafka needs zookeeper to start so we first need to run zookeeper use terminal to execute 
+-> zookeeper-server-start.bat (location of \zookeeper.properties without parenthesis)
+
+after running the server open next terminal for kafka server
+-> kafka-server-start.bat (location of \server.properties without parenthesis).
+            let them run is there respective window
+
+
+to create new Topic-
+-> kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test 
+
+to start a producer-
+->kafka-console-producer.bat --broker-list localhost:9092 --topic test
+
+to  see cosumer's data-
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from-beginning
+ 
+to check the list if broker ids-
+-> zookeeper-shell.bat localhost:2181 ls /roker/ids

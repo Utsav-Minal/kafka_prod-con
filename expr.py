@@ -24,10 +24,10 @@ def real():
     print(metadata.partition)
     producer.flush()
     
-schedule.every(3).seconds.do(real)
+schedule.every(3).seconds.do(real) #real() will be executed every 3rd second
 
 i=3
-while i>0:
+while i>0:  # to repeat real for 3 iterarion
     schedule.run_pending()
     time.sleep(3)
     i=i-1

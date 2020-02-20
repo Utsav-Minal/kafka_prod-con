@@ -47,10 +47,4 @@ for key_of_groupby_dict,value_of_groupby_dict in a.items(): # reading values fro
         f.write(data)
         f.close()
     
-# =============================================================================
-# for i in data:
-#     
-#     with open((data[int(i)][9:12])+(data[int(i)][-3:-1])+'.json','w') as f:
-#         f.write(data[i])
-#         f.close()
-# =============================================================================
+

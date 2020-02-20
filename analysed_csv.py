@@ -5,7 +5,7 @@
 import pandas as pd
 import json 
 
-d=pd.read_csv(r'crime.csv',usecols=[8,9,14,15],encoding='mbcs',low_memory=False)
+csv_data=pd.read_csv(r'crime.csv',usecols=[8,9,14,15],encoding='mbcs',low_memory=False)
 # =============================================================================
 # 8-YEAR
 # 9-MONTH
@@ -13,37 +13,37 @@ d=pd.read_csv(r'crime.csv',usecols=[8,9,14,15],encoding='mbcs',low_memory=False)
 # 15-Long
 # =============================================================================
 
-df=d.dropna() #droping all NA values
+data_frame=csv_data.dropna() #droping all NA values
 
-ex=df.groupby(['YEAR','MONTH'])[['Lat','Long']]  # This will give lat & long for diff Year & Month
+groupby_data=data_frame.groupby(['YEAR','MONTH'])[['Lat','Long']]  # This will give lat & long for diff Year & Month
 
-a={} # stores key as tuple(2015.0, 10.0) and value as dataframe with col name: YEAR,MONTH,Lat,Long
+groupby_dict={} # stores key as tuple(2015.0, 10.0) and value as dataframe with col name: YEAR,MONTH,Lat,Long
 
-l=[] # using this to store only year and month every value of this list will have data in form of tuple(2015.0, 10.0)
+year_month=[] # using this to store only year and month every value of this list will have data in form of tuple(2015.0, 10.0)
 
-dictn={} # it is being to store single record of  Location MONTH & YEAR for every json file
+single_record={} # it is storing single record of  Location, MONTH & YEAR for every json file
 
 
-for c,v in ex: #feeding data into a{} and l[] from ex groupby.genric.DataFrame
-    i=str(c)
-    a[i]=v
-    l.append(c)
+for key,value in groupby_data: #feeding data into a{} and l[] from ex groupby.genric.DataFrame
+    year_month_as_string=str(key)
+    a[year_month_as_string]=value
+    year_month.append(key)
     
-sep='-'
+seprator='-'
 
-for k,v in a.items(): # reading values from a{} in which keys are (2015.0, 10.0) and value is a corresponding dataframe
-                      # k contains key of a{} and v contains values of a{}
+for key_of_groupby_dict,value_of_groupby_dict in a.items(): # reading values from a{} in which keys are (2015.0, 10.0) and value is a corresponding dataframe
+                                                            # k contains key of a{} and v contains values of a{}
                       
-    v=v.drop(['YEAR','MONTH'],axis=1) # droping column of YEAR & MONTH as they are not required in dataframe.
+    value_of_groupby_dict=value_of_groupby_dict.drop(['YEAR','MONTH'],axis=1) # droping column of YEAR & MONTH as they are not required in dataframe.
     
-    v=v.to_dict('records') #converting values into dictionary in format of 'records'
+    value_of_groupby_dict=value_of_groupby_dict.to_dict('records') #converting values into dictionary in format of 'records'
     
-    dictn={'YEAR':int(k[1:5]),'Location':v,'MONTH':int(k[9:len(k)-3])} # here keys are string so slicing is done and then
-                                                                       # tupecasted to int 
+    single_record={'YEAR':int(key_of_groupby_dict[1:5]),'Location':value_of_groupby_dict,'MONTH':int(key_of_groupby_dict[9:len(key_of_groupby_dict)-3])} # here keys are string so slicing is done and then
+                                                                                                                                                         # typecasted to int 
     
-    data=(json.dumps(dictn,indent=2)) # data of dictn{} isbeing dumped wit formating
+    data=(json.dumps(single_record,indent=2)) # data of dictn{} isbeing dumped wit formating
     
-    with open (k[1:5]+sep+k[9:len(k)-3]+'.json','w') as f: # writing data into individual files
+    with open (key_of_groupby_dict[1:5]+seprator+key_of_groupby_dict[9:len(key_of_groupby_dict)-3]+'.json','w') as f: # writing data into individual files
         f.write(data)
         f.close()
     
